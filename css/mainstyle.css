@@ -1,0 +1,69 @@
+#wpbody{
+	display:none;
+}
+
+#bigmenutitle{
+	position:absolute;
+	top:100px;
+	left:0px;
+	width:100%;
+	font-family:Georgia, Times, 'New Times Roman';
+	font-size:24px;
+	color:#777;
+	text-align:center;
+}
+
+#secondarymenutitle{
+	position:absolute;
+	top:350px;
+	left:0px;
+	width:100%;
+	font-family:Georgia, Times, 'New Times Roman';
+	font-size:16px;
+	color:#777;
+	text-align:center;
+}
+
+#newmenu{
+	position:absolute;
+	top:135px;
+	left:0px;
+	width:100%;
+}
+
+#newmenu a, #secondarymenu a{
+	width:125px;
+	text-decoration:none;
+}
+
+#innermenu{
+	position:absolute;
+	left:50%;
+	background-color:#dbdbdb;
+	padding-top:10px;
+	padding-bottom:10px;
+	text-align:center;
+	border:1px solid #C6C6C6;
+	
+}
+
+
+#secondarymenu{
+	position:absolute;
+	top:375px;
+	left:0px;
+	width:100%;
+	
+}
+
+.page_menuitem{
+	float:left;
+	width:140px;
+}
+
+.page_menuitem img{
+	width:100px;
+	margin-bottom:5px;
+	margin-left:5px;
+}
+

@@ -1,0 +1,28 @@
+#adminmenu{display:none}
+#notice{display:none}
+#edit-slug-box{display:none}
+#normal-sortables{display:none}
+#pageparentdiv{display:none}
+#postimagediv{display:none}
+#minor-publishing{display:none}
+#delete-action{display:none}
+#favorite-actions{display:none}
+#favorite-actions-new{display:none}
+.update-nag{display:none}
+.wrap{margin-top:40px}
+
+
+#publishing-action{
+	float:left;
+	margin-left:0px;
+}
+#backbutton{
+	position:absolute;
+	top:70px;
+	left:20px;
+	padding:10px;
+	background-color:#333;
+}
+#backbutton:hover{
+	background-color:#777;
+}
