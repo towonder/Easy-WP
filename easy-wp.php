@@ -154,9 +154,9 @@ function easywp_setui($pages, $plugins){?>
 				echo '<div class="page_menuitem">';
 				echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$page->ID.'&action=edit">';
 				if(strtolower($page->post_title) == 'home'){
-					echo '<img src="'.plugins_url().'/easy-wp/img/home.png"/>';
+					echo '<img src="'.plugins_url().'/easy-wp/img/home.jpg"/>';
 				}else if(strtolower($page->post_title) == 'contact'){
-					echo '<img src="'.plugins_url().'/easy-wp/img/contact.png"/>';
+					echo '<img src="'.plugins_url().'/easy-wp/img/contact.jpg"/>';
 				}else{
 					echo '<img src="'.plugins_url().'/easy-wp/img/page.png"/>';
 				}
