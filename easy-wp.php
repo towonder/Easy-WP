@@ -3,7 +3,7 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 0.9
+Version: 1.0.5
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
@@ -154,9 +154,9 @@ function easywp_setui($pages, $plugins){?>
 				echo '<div class="page_menuitem">';
 				echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$page->ID.'&action=edit">';
 				if(strtolower($page->post_title) == 'home'){
-					echo '<img src="'.plugins_url().'/easy-wp/img/home.jpg"/>';
+					echo '<img src="'.plugins_url().'/easy-wp/img/home.png"/>';
 				}else if(strtolower($page->post_title) == 'contact'){
-					echo '<img src="'.plugins_url().'/easy-wp/img/contact.jpg"/>';
+					echo '<img src="'.plugins_url().'/easy-wp/img/contact.png"/>';
 				}else{
 					echo '<img src="'.plugins_url().'/easy-wp/img/page.png"/>';
 				}
