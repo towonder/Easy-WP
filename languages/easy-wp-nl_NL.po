@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy WP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-07 17:08+0100\n"
-"PO-Revision-Date: 2011-04-07 17:09+0100\n"
+"PO-Revision-Date: 2011-04-08 11:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: To Wonder <hallo@to-wonder.com>\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "Statistieken instellen"
 
 #: easy-wp.php:243
 msgid "You can get free Google-analytics stats in Easy WP, download <a href=\"http://wordpress.org/extend/plugins/wp-analytics/ \" target=\"_blank\">this excellent plugin by imthiaz</a>"
-msgstr "U kunt gratis Google analytics statistieken in Easy WP krijgen. Download <a href=\"http://wordpres.org/extend/plugins/wp-analytics/\" target=\"_blank\">deze toffe plugin van imthiaz</a>"
+msgstr "U kunt gratis Google analytics statistieken in Easy WP krijgen. Download <a href=\"http://wordpress.org/extend/plugins/wp-analytics/\" target=\"_blank\">deze toffe plugin van imthiaz</a>"
 
 #: easy-wp.php:284
 msgid "Back"
