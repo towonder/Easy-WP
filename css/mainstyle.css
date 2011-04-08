@@ -1,6 +1,15 @@
-#wpbody{
-	display:none;
-}
+/*
+Plugin Name: Easy WP
+Plugin URI: http://www.easy-wp.com
+Description: Easy WP transforms wordpress into a super-simple CMS;
+Version: 1.1
+Author: Luc Princen
+Author URI: http://www.to-wonder.com
+Contributors: Motief:Collectief (http://www.motiefcollectief.com)
+*/
+
+/*just go ahead and hide the whole friggin' wordpressbody: */
+#wpbody{display:none;}
 
 #bigmenutitle{
 	position:absolute;
@@ -65,5 +74,13 @@
 	width:100px;
 	margin-bottom:5px;
 	margin-left:5px;
+}
+
+.nostats{
+	position:absolute;
+	top:370px;
+	left:0px;
+	width:100%;
+	text-align:center;
 }
 

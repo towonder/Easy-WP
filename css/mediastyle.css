@@ -1,0 +1,12 @@
+/*
+Plugin Name: Easy WP
+Plugin URI: http://www.easy-wp.com
+Description: Easy WP transforms wordpress into a super-simple CMS;
+Version: 1.1
+Author: Luc Princen
+Author URI: http://www.to-wonder.com
+Contributors: Motief:Collectief (http://www.motiefcollectief.com)
+*/
+
+/* lost-o-stuff to remove here:*/
+#sidemenu{display:none}.upload-flash-bypass{display:none;}.howto{display:none;}.A1B1 .button{display:none;}.label{display:none;}.field{display:none;}.post_title form-required{display:none;}.image_alt{display:none;}.post_excerpt{display:none;}.post_content{display:none;}.url{display:none;}.align{display:none;}.image-size{display:none;}.del-link{display:none;}#gallery-settings{display:none;}#save{display:none;}

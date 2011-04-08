@@ -1,28 +1,52 @@
-#adminmenu{display:none}
-#notice{display:none}
-#edit-slug-box{display:none}
-#normal-sortables{display:none}
-#pageparentdiv{display:none}
-#postimagediv{display:none}
-#minor-publishing{display:none}
-#delete-action{display:none}
-#favorite-actions{display:none}
-#favorite-actions-new{display:none}
-.update-nag{display:none}
-.wrap{margin-top:40px}
+/*
+Plugin Name: Easy WP
+Plugin URI: http://www.easy-wp.com
+Description: Easy WP transforms wordpress into a super-simple CMS;
+Version: 1.1
+Author: Luc Princen
+Author URI: http://www.to-wonder.com
+Contributors: Motief:Collectief (http://www.motiefcollectief.com)
+*/
 
+/* remove everything distracting:*/
+#adminmenu{display:none}#notice{display:none}#edit-slug-box{display:none}#normal-sortables{display:none}#pageparentdiv{display:none}#minor-publishing{display:none}#delete-action{display:none}#add_video, #add_audio, #add_media{display:none}#edButtonHTML{display:none}#edButtonPreview{display:none}.update-nag{display:none}.wrap{margin-top:40px}
 
 #publishing-action{
 	float:left;
 	margin-left:0px;
 }
+
+#backsection a{text-decoration:none;}
+
 #backbutton{
 	position:absolute;
-	top:70px;
-	left:20px;
-	padding:10px;
-	background-color:#333;
+	top:220px;
+	width:130px;
+	height:27px;
+	left:10px;
+	background-image:url('../img/backbtn.png');
 }
-#backbutton:hover{
-	background-color:#777;
+#backbutton:hover{background-position:0 34px;}
+#backbutton:hover .backtext{color:#f8f8f8;}
+
+
+.backtext{font-size:15px;margin-top:3px;text-decoration:none;margin-left:10px; color:#333;}
+
+#easy-wp-overview{
+	position:absolute;
+	left:10px;
+	top:60px;
+	background-color:#dbdbdb;
+	width:146px;
+	height:152px;
+	text-align:center;
+	border:1px solid #C6C6C6;
+	text-align:center;
+	color:#21759B;
+}
+
+#easy-wp-overview img{
+	margin-top:10px;
+	margin-bottom:10px;
+	width:100px;
 }

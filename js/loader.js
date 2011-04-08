@@ -1,0 +1,1 @@
+jQuery('#wpwrap').append('<div id="easy-wp-loader"><img src="'+theUrl+'img/loading.gif"/><h1>'+loadTitle+'</h1><p>'+loadBody+'</p></div>');
