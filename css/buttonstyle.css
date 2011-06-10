@@ -94,3 +94,21 @@ Contributors: Motief:Collectief (http://www.motiefcollectief.com)
 	width:100%;
 	text-align:center;
 }
+
+/*
+	Trashcan style:
+*/
+
+#droppable{
+	width:81px;
+	height:107px;
+	position:absolute;
+	bottom:50px;
+	right:20px;
+	background-image:url('../img/droppable.jpg');
+	z-index:900;
+}
+
+.draggable{
+	z-index:999;
+}

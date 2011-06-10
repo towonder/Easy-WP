@@ -3,7 +3,7 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 1.1
+Version: 1.5
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
@@ -31,30 +31,14 @@ if(!load_plugin_textdomain('easy-wp','/wp-content/languages/')){
 	load_plugin_textdomain('easy-wp','/wp-content/plugins/easy-wp/languages/');
 }
 
-add_action('login_head', 'easywp_login');
+include('includes/login.php');
+include('includes/settings.php');
+
+
 add_action('admin_init', 'easywp_init');
-add_action('admin_print_scripts', 'easywp_addstyles');
+add_action('admin_menu', 'easywp_addscripts');
 add_action('admin_footer', 'easywp_addui');
 
-
-function easywp_login(){
-	$adminview = get_option('easywp_adminview');
-	if($adminview == 'false'){
-		?>
-			<link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/easy-wp/css/loginstyle.css"/>
-		<?php
-	
-		add_action('login_form', 'easywp_login_logo');
-	}
-}
-
-function easywp_login_logo(){
-	$adminview = get_option('easywp_adminview');
-	
-	if($adminview == 'false'){
-		echo '<div id="loginlogo"><a href="http://www.easy-wp.com" target="_blank"><img src="'.plugins_url().'/easy-wp/img/logo_small.png"/></a></div>';
-	}
-}
 
 function easywp_init(){
 	
@@ -62,6 +46,12 @@ function easywp_init(){
 	$view = get_option('easywp_adminview');
 	if(empty($view)){
 		add_option('easywp_adminview', 'false');
+		add_option('easywp_admin_godbutton', 'false');
+		add_option('easywp_pages_add_delete', 'false');
+		
+		add_option('easy-wp-current-button', '');
+		add_option('easy-wp-current-title', '');
+		add_option('easy-wp-current-backlink', '');
 	}
 	
 	if(isset($_GET['toggleView'])){
@@ -75,32 +65,36 @@ function easywp_init(){
 }
 
 
+function easywp_addscripts(){
 
-function easywp_addstyles(){
-	
+	//scripts:
+	wp_enqueue_script('easy_wp_jqui', plugins_url() . '/easy-wp/js/jquery-ui-1.8.12.custom.min.js');
+
+
+	//styles:
 	global $pagenow;
 	$page = $_GET['page'];
 	$view = get_option('easywp_adminview');
-	
-	?>
-	<link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/easy-wp/css/buttonstyle.css"/>	
-<?php
-	if($view == 'false'): 
-		if($pagenow == 'post.php' || $pagenow == 'edit.php' || $pagenow == 'post-new.php'){
-			//display editmode:
-			if(!ISSET($_GET['view']) || $_GET['view'] == 'main'){
-				echo '<link rel="stylesheet" href="'.plugins_url().'/easy-wp/css/editstyle.css"/>';
+
+	wp_enqueue_style('easy_wp_button_style', plugins_url().'/easy-wp/css/buttonstyle.css');
+
+
+		if($view == 'false'): 
+			if($pagenow == 'post.php' || $pagenow == 'edit.php' || $pagenow == 'post-new.php'){
+				//display editmode:
+				if(!ISSET($_GET['view']) || $_GET['view'] == 'main'){
+					wp_enqueue_style('easy_wp_edit_style', plugins_url().'/easy-wp/css/editstyle.css');
+				}
+			}else if($page == 'wp-analytics-reports' || $page == 'wp-analytics-options'){
+				//display statspage or edit stats:
+				wp_enqueue_style('easy_wp_stats_style', plugins_url().'/easy-wp/css/statsstyle.css');
+			}else if($pagenow == 'media-upload.php'){
+				wp_enqueue_style('easy_wp_media_style', plugins_url().'/easy-wp/css/mediastyle.css');
+			}else{
+				//display main menu:
+				wp_enqueue_style('easy_wp_main_style', plugins_url().'/easy-wp/css/mainstyle.css');
 			}
-		}else if($page == 'wp-analytics-reports' || $page == 'wp-analytics-options'){
-			//display statspage or edit stats:
-			echo '<link rel="stylesheet" href="'.plugins_url().'/easy-wp/css/statsstyle.css"/>';
-		}else if($pagenow == 'media-upload.php'){
-			echo '<link rel="stylesheet" href="'.plugins_url().'/easy-wp/css/mediastyle.css"/>';
-		}else{
-			//display main menu:
-			echo '<link rel="stylesheet" href="'.plugins_url().'/easy-wp/css/mainstyle.css" />';
-		}
-	endif;
+		endif;	
 }
 
 
@@ -118,15 +112,24 @@ function easywp_addui(){
 	}
 	
 	//plugins are a work in progress:
-	//$plugins = easywp_get_plugins();
-	$plugins = array();
+	$plugins = easywp_get_plugins();
+
+	//$plugins = array();
 	$pages = get_pages(array('sort_order' => 'ASC','sort_column' => 'menu_order'));
 		
 	if($view == 'false'){
-		if($pagenow == 'post.php' || $pagenow == 'edit.php'){
+		if($pagenow == 'post.php' || $pagenow == 'edit.php' || $pagenow == 'post-new.php'){
 			if(!ISSET($_GET['view']) || $_GET['view'] == 'main'){
 				//edit pages / posts:
+				
+				if(!easywp_current_page_is_ewp_plugin()){
+					update_option('easy-wp-current-button', '');
+					update_option('easy-wp-current-title', '');
+					update_option('easy-wp-current-backlink', '');					
+				}
+				
 				easywp_set_back_button($page);	
+				
 			}
 			//otherwise it's an easy wp plugin.
 		}else if($page == 'wp-analytics-reports' || $page == 'wp-analytics-options'){
@@ -137,7 +140,8 @@ function easywp_addui(){
 			easywp_setui($pages, $plugins);
 		}
 		
-		echo '<script type="text/javascript">var theUrl = "'.plugins_url().'/easy-wp/";var loadTitle = "'. __('Loading', 'easy-wp').'";var loadBody = "'. __('please wait', 'easy-wp').'"; var credits ="'.__('Easy WP, created by <a href=\"http://www.to-wonder.com\" target=\"_blank\">To Wonder</a> & <a href=\"http://www.motiefcollectief.com\" target=\"_blank\">Motief Collectief</a>', 'easy-wp').'"</script>';
+		//Add the javascripts quick and dirty, so we can pass some variables:
+		echo '<script type="text/javascript">var theUrl = "'.plugins_url().'/easy-wp/"; var homeUrl = "'.admin_url().'"; var loadTitle = "'. __('Loading', 'easy-wp').'";var loadBody = "'. __('please wait', 'easy-wp').'"; var credits ="'.__('Easy WP, created by <a href=\"http://www.to-wonder.com\" target=\"_blank\">To Wonder</a> & <a href=\"http://www.motiefcollectief.com\" target=\"_blank\">Motief Collectief</a>', 'easy-wp').'"</script>';
 		echo '<script type="text/javascript" src="'.plugins_url().'/easy-wp/js/functions.js"></script>';
 		echo '<script type="text/javascript" src="'.plugins_url().'/easy-wp/js/loader.js"></script>';
 	}	
@@ -148,33 +152,79 @@ function easywp_addui(){
 
 function easywp_setbutton($adminviewtext, $adminviewclass){
 	echo '<div id="easy-wp-logo"><a href="'.get_site_url().'"><img src="'.plugins_url().'/easy-wp/img/logo.png" title="Powered by Wordpress"></a></div>';
-	echo '<div id="favorite-actions-new" onclick="window.location.href=\''.admin_url().'?toggleView=true\'"><div id="favorite-first"><img src="'.plugins_url().'/easy-wp/img/'.$adminviewclass.'" class="fav-img" />';
-	echo '<a href="'.admin_url().'?toggleView=true" id="fav-link">'.$adminviewtext.'</a>';
-	echo '</div></div>';
+	
+	$godbutton = get_option('easywp_admin_godbutton');
+	
+	if($godbutton == 'true' || current_user_can('administrator')){
+		//everybody can see the button
+		echo '<div id="favorite-actions-new" onclick="window.location.href=\''.admin_url().'?toggleView=true\'"><div id="favorite-first"><img src="'.plugins_url().'/easy-wp/img/'.$adminviewclass.'" class="fav-img" />';
+		echo '<a href="'.admin_url().'?toggleView=true" id="fav-link">'.$adminviewtext.'</a>';
+		echo '</div></div>';
+	}
 }
+
 
 function easywp_get_plugins(){
 	$plugins = array();
-	$gallery = get_option('easywp-gallery-active');
-	if($gallery == 'true'){
-		$plugins[] = 'gallery';
+	
+	$plugs = scandir(WP_CONTENT_DIR.'/plugins');
+	$a = 0;
+	foreach($plugs as $pl){
+		if(substr($pl, 0, 8) == 'easy-wp-'){
+			if(is_plugin_active($pl.'/'.$pl.'.php')){
+				$plugins[$a] = $pl;
+				$a++;
+			}
+		}
+	}
+	 return $plugins;
+}
+
+
+function easywp_current_page_is_ewp_plugin(){
+	
+	global $pagenow;
+	$plugins = easywp_get_plugins();
+	
+	if(ISSET($_GET['post'])){
+		
+		foreach($plugins as $pl){
+			if('easy-wp-'.get_post_type($_GET['post']) == $pl){
+				return true;
+				break;
+			}
+		}
+		
+	}else{
+		if(!ISSET($_GET['post_type'])){
+			return false;
+		}else{
+			return true;
+		}
 		
 	}
-	
-	return $plugins;
 }
 
 
 function easywp_setui($pages, $plugins){?>
 	
 	<?php
+	$pagesoptions = get_option('easywp_pages_add_delete');
+	if($pagesoptions == 'false'){
+		$amount = count($pages);
+	}else{
+		$amount = count($pages) + 1;
+	}
 	
-	$amount = count($pages);
+	
 	$width = $amount * 140;
 	$pamount = count($plugins);
 	
+		
 	$stats = false;
+	$noplugins = true;
 	$statssettings = false;
+	
 	if(is_plugin_active('wp-analytics/analytics.php')){
 		$stats = true;
 		$pamount++;
@@ -187,8 +237,13 @@ function easywp_setui($pages, $plugins){?>
 		}
 	}
 	
+	if(!empty($plugins)){
+		$noplugins = false;
+	}
+	
 	$pwidth = $pamount * 140;
-		
+	
+	
 	?>
 	
 	<div id="bigmenutitle">
@@ -196,9 +251,28 @@ function easywp_setui($pages, $plugins){?>
 	</div>
 	<div id="newmenu">
 		<div id="innermenu" style="width:<?php echo $width?>px;margin-left:-<?php echo floor($width / 2);?>px">
+			<?php if($pagesoptions == 'true'):?>
+				<div class="page_menuitem">
+					<a href="<?php echo admin_url()?>post-new.php?post_type=page">
+						<img src="<?php echo plugins_url()?>/easy-wp/img/new.png" /><br/>
+						<?php _e('Add new page', 'easy-wp');?>
+					</a>
+				</div>
+			<?php endif; ?>
+			
 		<?php 
 			foreach($pages as $page){
-				echo '<div class="page_menuitem">';
+				if($pageoption == 'false'){
+					echo '<div class="page_menuitem">';
+				}else{
+					echo '<div class="page_menuitem draggable" id="'.$page->ID.'">';
+				//	$nonce= wp_create_nonce('my-nonce');
+					echo '<div id="post-'.$page->ID.'" style="display:none">';
+					$delLink = wp_nonce_url( get_bloginfo('url') . "/wp-admin/post.php?action=delete&amp;post=" . $page->ID, 'delete-post_' . $page->ID);				    
+					echo '<a class="submitdelete"  href="'.get_delete_post_link($page->ID).'"></a>';
+					echo '</div>';
+				}
+				
 				echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$page->ID.'&action=edit">';
 				if(strtolower($page->post_title) == 'home' || strtolower($page->post_title) == 'homepage'){
 					echo '<img src="'.plugins_url().'/easy-wp/img/home.jpg"/>';
@@ -209,6 +283,7 @@ function easywp_setui($pages, $plugins){?>
 				}
 				echo '<br/>'.ucwords($page->post_title).'</a>';
 				echo '</div>';
+				
 			}
 		
 		?>
@@ -238,6 +313,22 @@ function easywp_setui($pages, $plugins){?>
 				</div>
 			<?php endif; ?>
 			
+			<?php foreach($plugins as $plugin):?>
+				<?php 
+					$ptype = '';
+					$ptype = get_option($plugin.'-posttype');
+				?>
+				<div class="page_menuitem">
+					<?php if($ptype != ''):?>
+						<a href="<?php echo admin_url();?>edit.php?post_type=<?php echo $ptype?>">
+					<?php else:?>
+						<a href="<?php echo admin_url();?>edit.php">
+					<?php endif;?>
+							<img src="<?php echo plugins_url();?>/<?php echo $plugin?>/img/btn.png"><br/>
+							<?php echo get_option($plugin.'-name');?>
+					</a> 
+				</div>
+			<?php endforeach;?>
 		</div>
 	</div>
 	<?php endif;?>
@@ -245,34 +336,66 @@ function easywp_setui($pages, $plugins){?>
 	<?php if($stats == false):?>
 		<p class="nostats"><?php _e('You can get free Google-analytics stats in Easy WP, download <a href="http://wordpress.org/extend/plugins/wp-analytics/ " target="_blank">this excellent plugin by imthiaz</a>', 'easy-wp')?></p>
 	<?php endif;?>
+	
+	<?php if($pagesoptions == 'true'):?>
+		<div id="droppable">
+		</div>
+	<?php endif;?>
+	
 <?php };
 
 
 
-function easywp_set_back_button($page){
+function easywp_set_back_button($page, $posttype){
 	
 	$img = '';
 	$title = '';
+	$postview = false;
 	
-	if($page == null){
-		$post_query = $_GET['post'];
-		if(isset($post_query)){
-			$current = get_post($post_query);
-			$title = strtolower($current->post_title);
-			if($title == 'home' || $title == 'homepage'){
-				$img = plugins_url().'/easy-wp/img/home.jpg';
-			}else if($title == 'contact'){
-				$img = plugins_url().'/easy-wp/img/contact.jpg';
-			}else{
-				$img = plugins_url().'/easy-wp/img/page.png';
+	$currentbutton = get_option('easy-wp-current-button');
+	
+	//check if we are dealing with a plugin:
+	if(!easywp_current_page_is_ewp_plugin()){
+		if($page == null){
+			$post_query = $_GET['post'];
+			if(isset($post_query)){
+				$postview = true;
+				$current = get_post($post_query);
+				$title = strtolower($current->post_title);
+				if($title == 'home' || $title == 'homepage'){
+					$img = plugins_url().'/easy-wp/img/home.jpg';
+				}else if($title == 'contact'){
+					$img = plugins_url().'/easy-wp/img/contact.jpg';
+				}else{
+					$img = plugins_url().'/easy-wp/img/page.png';
+				}
+				$overviewtitle = $current->post_title;
 			}
-			$overviewtitle = $current->post_title;
+		
+		}else{
+			
+			if($page == 'wp-analytics-reports' || $page == 'wp-analytics-options'){
+				$img = plugins_url().'/easy-wp/img/stats.png';
+				$overviewtitle = __('Statistics', 'easy-wp');
+			}else{
+				$img = plugins_url().$page.'/img/btn.png';
+			}
 		}
+	}else if($_GET['post_type'] != 'page'){
+		//we are: 
+		global $pagenow;
+		$post_query = $_GET['post_type'];
+			
+		if($pagenow == 'post.php' || $pagenow == 'post-new.php'){
+			$postview = true;
+		}
+		
+		$img = $currentbutton;
+		$overviewtitle = get_option('easy-wp-current-title');
+		$backlink = get_option('easy-wp-current-backlink');
 	}else{
-		if($page == 'wp-analytics-reports' || $page == 'wp-analytics-options'){
-			$img = plugins_url().'/easy-wp/img/stats.png';
-			$overviewtitle = __('Statistics', 'easy-wp');
-		}
+		$img = plugins_url().'/easy-wp/img/page.png';
+		$overviewtitle = 'newpage';
 	}
 	
 	
@@ -280,9 +403,19 @@ function easywp_set_back_button($page){
 	<div id="backsection">
 		<div id="easy-wp-overview">
 			<img src="<?php echo $img; ?>"><br/>
-				<?php echo $overviewtitle; ?>
+				<?php if($overviewtitle != 'newpage'):?>
+					<?php echo $overviewtitle; ?>
+				<?php else:?>
+					<?php _e('New page', 'easy-wp');?>
+				<?php endif;?>
 			</div>
-		<a href="<?php echo admin_url(); ?>" style="color:#f8f8f8;">
+		
+		<?php if($postview == false || $backlink == ''):?>	
+			<a href="<?php echo admin_url(); ?>" style="color:#f8f8f8;">
+		<?php else:?>
+			<a href="<?php echo admin_url();?>edit.php?post_type=<?php echo $backlink?>" style="color:#f8f8f8">
+		<?php endif;?>
+			
 			<div id="backbutton" class="button-primary">
 				<p class="backtext">&laquo; <?php _e('Back', 'easy-wp');?></p>
 			</div>

@@ -3,8 +3,8 @@ Contributors: towonder
 Donate link: http://www.easy-wp.com
 Tags: cms, simple, easy, client, admin, stats, pages
 Requires at least: 3.0
-Tested up to: 3.1
-Stable tag: 1.1
+Tested up to: 3.1.3
+Stable tag: 1.5
 
 Easy WP turns Wordpress into a super-simple cms. It lists all pages and can tap into google analytics reports thanks to imthiaz.
 
@@ -52,6 +52,20 @@ But we are planning an Easy WP settings page where this feature will be possible
 3. And this is statistics
 
 == Changelog ==
+
+= 1.5 =
+* Added a settingspage
+* Added a setting for displaying the Simple / Advanced button to everyone or just admins
+* Added a setting for creating and deleting pages
+
+= 1.4 =
+* Added plugin documentation
+
+= 1.3 = 
+* Added a Easy-WP Plugin detection
+
+= 1.2 =
+* Added drag & drop page/post deletion
 
 = 1.1 =
 * Internationalized (default language is english, dutch is still available)

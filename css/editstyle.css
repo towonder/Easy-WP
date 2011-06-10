@@ -9,7 +9,7 @@ Contributors: Motief:Collectief (http://www.motiefcollectief.com)
 */
 
 /* remove everything distracting:*/
-#adminmenu{display:none}#notice{display:none}#edit-slug-box{display:none}#normal-sortables{display:none}#pageparentdiv{display:none}#minor-publishing{display:none}#delete-action{display:none}#add_video, #add_audio, #add_media{display:none}#edButtonHTML{display:none}#edButtonPreview{display:none}.update-nag{display:none}.wrap{margin-top:40px}
+#adminmenu{display:none}#notice{display:none}#edit-slug-box{visibility:none}#normal-sortables{visibility:none}#pageparentdiv{display:none}#minor-publishing{display:none}#delete-action{display:none}#add_video, #add_audio, #add_media{display:none}#edButtonHTML{display:none}#edButtonPreview{display:none}.update-nag{display:none}.wrap{margin-top:40px}
 
 #publishing-action{
 	float:left;

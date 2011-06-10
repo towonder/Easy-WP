@@ -1,0 +1,189 @@
+=== Easy WP Plugin documentation ===
+
+
+	So you would like to create your own Easy WP plugins? No problem!
+	Here's a small manual on how to create a basic plugin. 
+	For the sake of simplicity, we'll be walking through the steps of creating an 
+	"Agenda" plugin.
+
+	We start by creating a standard wordpress plugin. Easy WP plugins are detected
+	by name, so naming-conventions are very important. Create a folder named easy-wp-agenda
+	and add an empty php file called 'easy-wp-agenda.php'. You then start the php file with
+	standard Wordpress-setup:
+	
+		#	<?php
+		#	/*
+		#	Plugin Name: Easy WP Agenda
+		#	Plugin URI: http://www.easy-wp.com
+		#	Description: Easy WP agenda enables super-simple agenda management
+		#	Version: 0.1
+		#	Author: To Wonder
+		#	Author URI: http://www.to-wonder.com
+		#	Contributors: Motief:Collectief (http://www.motiefcollectief.com)
+		#	*/
+		#	?>	
+	
+	That's the first step! You've setup a new plugin!	
+	
+	
+	>	"Wordpress plugin 101" can be found here:
+		http://codex.wordpress.org/Writing_a_Plugin
+
+
+	------------------------------------------------
+	
+
+	The second thing you are going to need is a custom posttype and some naming conventions
+
+	>	To register a custom posttype, check the wordpress-codex:
+		http://codex.wordpress.org/Function_Reference/register_post_type
+		
+	
+	Again, naming convention is important, it needs to be 'agenda', in this case but if you're creating something
+	else; name your posttype after your folder (everything after 'easy-wp-' is the name of your posttype).
+	
+	After that, you're plugin needs to register some options. We use the admin_init hook for this:
+	
+		#	add_action('admin_init', 'ewp_agenda_setname');
+		#
+		#	function ewp_agenda_setname(){
+		#		$name = get_option('easy-wp-agenda-name');
+		#		
+		#		if(empty($name)){
+		#			add_option('easy-wp-agenda-name', 'Agenda');
+		#		}	
+		#		
+		#		$posttype = get_option('easy-wp-agenda-posttype');
+		#		if(empty($posttype)){
+		#			add_option('easy-wp-agenda-posttype', 'agenda');
+		#		}
+		#	}
+			
+	Here you'll add the name of the posttype and the menuname to the database.	
+	Also, if you add /easy-wp-agenda/img/btn.png, Easy WP automatically picks up the
+	icon you'd like to use for this plugin.
+	
+	
+	--------------------------------------------------------------------------
+	
+	Step 3: Main UI:
+	
+	Easy WP loads standard css + images in on every page, so use these standards and (for consistancy)
+	don't change the layout:
+	
+		#	add_action('admin_footer', 'ewp_agenda_ui');
+		#
+		#
+		#	function ewp_agenda_ui(){
+		#		global $pagenow;
+		#		$posttype = $_GET['post_type'];
+		#
+		#		if($pagenow == 'edit.php' && $posttype == 'agenda'){
+		#		
+		#			//get all the agenda items:
+		#			$ps = new WP_Query("post_type=agenda");
+		#
+		#			$posts = array();
+		#			$i = 0;
+		#			//put 'em in an array:
+		#			foreach($ps->posts as $p){
+		#
+		#				$start = get_post_meta($p->ID, 'agenda_date', true) ;
+		#				$posts[$i]['ID'] = $p->ID;
+		#				$posts[$i]['post_date'] = $p->post_date;
+		#				$posts[$i]['post_title'] = $p->post_title;
+		#				$posts[$i]['begin'] = $start;
+		#				$i++;
+		#			}
+		#			
+		#			//dynamically calculate the width of #innermenu
+		#			$amount = count($posts) +1;
+		#			$width = $amount * 140;
+		#
+		#			?>
+		#			<div id="bigmenutitle">
+		#				Which agendaitem would you like to edit?
+		#			</div>
+		#			
+		#			<div id="newmenu">
+		#				<div id="innermenu" style="width:<?php echo $width?>px;margin-left:-<?php echo floor($width / 2);?>px">
+		#					<!-- first the 'create new' button: -->
+		#					<div class="page_menuitem">
+		#						<a href="<?php echo admin_url()?>post-new.php?post_type=agenda">
+		#							<img src="<?php echo plugins_url()?>/easy-wp/img/new.png" /><br/>
+		#							New agenda item
+		#						</a>
+		#					</div>
+		#					
+		#					<?php
+		#					//then all the posts:
+		#					foreach($posts as $post){
+		#						
+		#						//here we add the 'draggable' class:
+		#						echo '<div class="page_menuitem draggable" id="'.$post['ID'].'">';
+		#						echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$post['ID'].'&action=edit&post_type=agenda">';
+		#						
+		#						//here we use an icon, this can ofcourse be anything you'd like:
+		#						echo '<img src="'.plugins_url().'/easy-wp-agenda/img/point.png" width="80px"/>';
+		#						echo '<br/>'.ucwords($post['post_title']).'</a>';
+		#						echo '</div>';
+		#					}				
+		#					?>
+		#				</div>
+		#			</div>
+		#
+		#			<!-- add the #droppable div as trash: -->
+		#			<div id="droppable">
+		#			</div>
+		#
+		#			<?php 
+		#		}
+		#	}
+		#	
+		#	?>
+			
+			
+	Using the divnames draggable and droppable will automatically enable drag & drop page-deletion (just drag an agenda item to the trashcan).
+	
+	
+	--------------------------------------------------------------------------
+		
+	Step 4: Edit:
+	
+	And now we'll add information to the 'admin_menu' hook, so Easy WP know's which is the current page:
+	
+		#	add_action('admin_menu', 'ewp_agenda_admin_menu');
+		#	
+		#	function ewp_agenda_admin_menu(){
+		#		global $pagenow;
+		#		$view = get_option('easywp_adminview');
+		#		$posttype = $_GET['post_type'];
+		#
+		#		if($view == 'false'){
+		#			if($pagenow == 'edit.php' && $posttype == 'agenda') {
+		#				
+		#				// set all variables for the "back"-button:
+		#
+		#				$url = plugins_url().'/easy-wp-agenda/img/btn.png';
+		#				update_option('easy-wp-current-button', $url);
+		#				update_option('easy-wp-current-title', 'Agenda');
+		#				update_option('easy-wp-current-backlink', 'agenda');
+		#			}
+		#		}
+		#	}
+	
+	------------------------------------------------------------------------
+	
+	Okay, that's it. We've setup a basic Easy WP plugin. Ofcourse you can do everything the wordpress-pluginengine also can, but
+	this is the way we use this engine. We try to keep it simple and consistent. Easy WP is, after all, meant to be the 
+	little guy's dashboard!
+	
+	
+	Have fun experimenting!
+	Cheers,
+	To Wonder & Motief:Collectief
+	
+	
+	
+	
+
