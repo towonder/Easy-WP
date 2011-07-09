@@ -3,7 +3,7 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 1.5
+Version: 1.5.2
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
@@ -151,7 +151,11 @@ function easywp_addui(){
 
 
 function easywp_setbutton($adminviewtext, $adminviewclass){
-	echo '<div id="easy-wp-logo"><a href="'.get_site_url().'"><img src="'.plugins_url().'/easy-wp/img/logo.png" title="Powered by Wordpress"></a></div>';
+	$view = get_option('easywp_adminview');
+	
+	if($view == 'false'){
+		echo '<div id="easy-wp-logo"><a href="'.get_site_url().'"><img src="'.plugins_url().'/easy-wp/img/logo.png" title="Powered by Wordpress"></a></div>';
+	}
 	
 	$godbutton = get_option('easywp_admin_godbutton');
 	

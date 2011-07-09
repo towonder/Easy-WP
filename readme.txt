@@ -3,8 +3,8 @@ Contributors: towonder
 Donate link: http://www.easy-wp.com
 Tags: cms, simple, easy, client, admin, stats, pages
 Requires at least: 3.0
-Tested up to: 3.1.3
-Stable tag: 1.5
+Tested up to: 3.2
+Stable tag: 1.5.2
 
 Easy WP turns Wordpress into a super-simple cms. It lists all pages and can tap into google analytics reports thanks to imthiaz.
 
@@ -52,6 +52,9 @@ But we are planning an Easy WP settings page where this feature will be possible
 3. And this is statistics
 
 == Changelog ==
+
+= 1.5.2 =
+* Added Wordpress 3.2 support
 
 = 1.5 =
 * Added a settingspage

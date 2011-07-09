@@ -2,7 +2,7 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 1.1
+Version: 1.5.2
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
@@ -20,12 +20,14 @@ Contributors: Motief:Collectief (http://www.motiefcollectief.com)
 #favorite-actions-new{
 	/*display:none;*/
 	position:absolute;
-	top:10px;
+	top:5px;
 	right:170px;
 	width:auto;
 	cursor:hand;
 	cursor:pointer;
 }
+#favorite-actions-new img{margin-left:12px;}
+
 
 #favorite-actions-new:hover #fav-link{
 	color:#D54E21;

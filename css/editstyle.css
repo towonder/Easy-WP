@@ -2,15 +2,19 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 1.1
+Version: 1.5.2
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
 */
 
 /* remove everything distracting:*/
-#adminmenu{display:none}#notice{display:none}#edit-slug-box{visibility:none}#normal-sortables{visibility:none}#pageparentdiv{display:none}#minor-publishing{display:none}#delete-action{display:none}#add_video, #add_audio, #add_media{display:none}#edButtonHTML{display:none}#edButtonPreview{display:none}.update-nag{display:none}.wrap{margin-top:40px}
-
+#adminmenu{display:none}#notice{display:none}#screen-options-link-wrap{display:none;}#edit-slug-box{visibility:none}#normal-sortables{visibility:none}#pageparentdiv{display:none}#minor-publishing{display:none}#delete-action{display:none}#add_video, #add_audio, #add_media{display:none}#edButtonHTML{display:none}#edButtonPreview{display:none}.update-nag{display:none}.wrap{margin-top:40px}
+#adminmenuback, #adminmenuwrap{display:none;}
+#wphead{height:50px;width:100%;position:absolute;top:0px;left:0px;}
+#user_info{margin-top:25px;}
+#wpwrap{overflow-x:hidden;}
+.wrap{padding-left:20px;margin-top:60px;overflow:hidden;}
 #publishing-action{
 	float:left;
 	margin-left:0px;
