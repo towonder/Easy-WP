@@ -3,7 +3,7 @@
 Plugin Name: Easy WP
 Plugin URI: http://www.easy-wp.com
 Description: Easy WP transforms wordpress into a super-simple CMS;
-Version: 1.5.2
+Version: 1.5.3
 Author: Luc Princen
 Author URI: http://www.to-wonder.com
 Contributors: Motief:Collectief (http://www.motiefcollectief.com)
@@ -44,6 +44,7 @@ function easywp_init(){
 	
 	
 	$view = get_option('easywp_adminview');
+	$settings = get_option('easywp_pages_add_delete');
 	if(empty($view)){
 		add_option('easywp_adminview', 'false');
 		add_option('easywp_admin_godbutton', 'false');
@@ -54,6 +55,10 @@ function easywp_init(){
 		add_option('easy-wp-current-backlink', '');
 	}
 	
+	if(empty($settings)){
+		add_option('easywp_pages_add_delete','false');
+	}
+	
 	if(isset($_GET['toggleView'])){
 		if($view == 'false'){
 			update_option('easywp_adminview', 'true');
@@ -62,6 +67,8 @@ function easywp_init(){
 		}
 		Header('Location: '. $_SERVER['HTTP_REFERER']);
 	}	
+	
+	
 }
 
 
@@ -128,7 +135,7 @@ function easywp_addui(){
 					update_option('easy-wp-current-backlink', '');					
 				}
 				
-				easywp_set_back_button($page);	
+				easywp_set_back_button($page, 'page');	
 				
 			}
 			//otherwise it's an easy wp plugin.
@@ -277,7 +284,7 @@ function easywp_setui($pages, $plugins){?>
 					echo '</div>';
 				}
 				
-				echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$page->ID.'&action=edit">';
+				echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$page->ID.'&action=edit&post_type=page">';
 				if(strtolower($page->post_title) == 'home' || strtolower($page->post_title) == 'homepage'){
 					echo '<img src="'.plugins_url().'/easy-wp/img/home.jpg"/>';
 				}else if(strtolower($page->post_title) == 'contact'){
